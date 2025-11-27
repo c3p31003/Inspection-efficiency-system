@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>遊具管理システム | 点検チェックシート</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/destyle.css@1.0.15/destyle.css"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <header>
+            <div class="header_title"><a href="index.html"><h1>遊具管理システム</h1></a></div>
+            <div class="alert"></div>
+            <div class="openbtn"><span></span><span></span><span></span></div>
+        </header>
+        <div class="wrapper">
+            <div class="section">
+                <div class="CheckSheet_input_area AllDocuments_search_section">
+                    <label for="parks">公園名</label><br>
+                    <input type="search" name="search" placeholder="キーワードを入力"><br>
+                    <label for="author">作成者名</label><br>
+                    <input type="search" name="search" placeholder="キーワードを入力"><br>
+                    <div class="CheckSheet_search_year" id="CheckSheet_search_year">
+                        <label for="years">点検年度</label><br>
+                        <select id="years_box" name="years">
+                            <option value="all" selected>すべて</option>
+                            <option value="3">令和７年度</option>
+                            <option value="2">令和６年度</option>
+                            <option value="1">令和５年度</option>
+                        </select>
+                    </div><br>
+                    <div class="CheckSheet_search_year" id="CheckSheet_search_year">
+                        <label for="years">設置年度</label><br>
+                        <select id="years_box" name="years">
+                            <option value="all" selected>令和</option>
+                            <option value="1">平成</option>
+                        </select>
+                    </div>
+                    <div class="CheckSheet_search_year">
+                        <select id="years_box" name="years">
+                            <option value="1">１年度</option>
+                            <option value="2">２年度</option>
+                            <option value="3">３年度</option>
+                            <option value="4">４年度</option>
+                            <option value="5">５年度</option>
+                            <option value="6">６年度</option>
+                            <option value="7">７年度</option>
+                            <option value="8">８年度</option>
+                            <option value="9">９年度</option>
+                            <option value="10">１０年度</option>
+                            <option value="11">１１年度</option>
+                            <option value="12">１２年度</option>
+                            <option value="13">１３年度</option>
+                            <option value="14">１４年度</option>
+                            <option value="15">１５年度</option>
+                            <option value="16">１６年度</option>
+                            <option value="17">１７年度</option>
+                            <option value="18">１８年度</option>
+                            <option value="19">１９年度</option>
+                            <option value="20">２０年度</option>
+                            <option value="21">２１年度</option>
+                            <option value="22">２２年度</option>
+                            <option value="23">２３年度</option>
+                            <option value="24">２４年度</option>
+                            <option value="25">２５年度</option>
+                            <option value="26">２６年度</option>
+                            <option value="27">２７年度</option>
+                            <option value="28">２８年度</option>
+                            <option value="29">２９年度</option>
+                            <option value="30">３０年度</option>
+                            <option value="31">３１年度</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="section check_area">
+                <p>点検日</p>
+                <div class="CheckSheet_set_date">
+                    <input type="date" id="inspection_date" min="">
+                </div>
+                <div class="CheckSheet_send_button">
+                    <a href="{{ url_for('TakePhoto') }}" class="hover-link">
+                        <button>写真撮影</button>
+                    </a>
+                </div>
+
+                <h1>点検時の記録</h1>
+                
+                <!-- ⭐ 【重要】AI推論結果の表示 -->
+                <div id="ai-result-display" style="background-color: #f0f0f0; padding: 15px; margin-bottom: 20px; border-radius: 5px; display: none;">
+                    <h3>🤖 AI判定結果（チェーン）</h3>
+                    <p>
+                        判定: <strong id="ai-condition-display"></strong>
+                        <span id="ai-confidence-display"></span>
+                    </p>
+                </div>
+
+                <table class="CheckSheet_list">
+                    <thead>
+                    <tr>
+                        <th>点検部位</th>
+                        <th>項目</th>
+                        <th colspan="3">結果</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>A<br>異常なし</th>
+                        <th>B<br>経過観察</th>
+                        <th>C<br>要対応</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <!-- ✅ チェーン行（AI推論結果を自動反映） -->
+                        <tr>
+                            <td>チェーン</td>
+                            <td>錆の有無</td>
+                            <td>
+                            <input type="radio" id="chain_a" name="chain_result" value="A">
+                            <label class="checkbox_wrapper" for="chain_a"></label>
+                            </td>
+                            <td>
+                            <input type="radio" id="chain_b" name="chain_result" value="B">
+                            <label class="checkbox_wrapper" for="chain_b"></label>
+                            </td>
+                            <td>
+                            <input type="radio" id="chain_c" name="chain_result" value="C">
+                            <label class="checkbox_wrapper" for="chain_c"></label>
+                            </td>
+                        </tr>
+
+                        <!-- 手動記入が必要な他の部位 -->
+                        <tr>
+                            <td>吊金具</td>
+                            <td>破損・変形</td>
+                            <td>
+                            <input type="radio" id="suspension_a" name="suspension_result" value="A">
+                            <label class="checkbox_wrapper" for="suspension_a"></label>
+                            </td>
+                            <td>
+                            <input type="radio" id="suspension_b" name="suspension_result" value="B">
+                            <label class="checkbox_wrapper" for="suspension_b"></label>
+                            </td>
+                            <td>
+                            <input type="radio" id="suspension_c" name="suspension_result" value="C">
+                            <label class="checkbox_wrapper" for="suspension_c"></label>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>座板</td>
+                            <td>ひび割れ・破損</td>
+                            <td>
+                            <input type="radio" id="seat_a" name="seat_result" value="A">
+                            <label class="checkbox_wrapper" for="seat_a"></label>
+                            </td>
+                            <td>
+                            <input type="radio" id="seat_b" name="seat_result" value="B">
+                            <label class="checkbox_wrapper" for="seat_b"></label>
+                            </td>
+                            <td>
+                            <input type="radio" id="seat_c" name="seat_result" value="C">
+                            <label class="checkbox_wrapper" for="seat_c"></label>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>ここに点検部位名</td>
+                            <td>ここに項目</td>
+                            <td>
+                            <input type="radio" id="engine2_a" name="engine2" value="A">
+                            <label class="checkbox_wrapper" for="engine2_a"></label>
+                            </td>
+                            <td>
+                            <input type="radio" id="engine2_b" name="engine2" value="B">
+                            <label class="checkbox_wrapper" for="engine2_b"></label>
+                            </td>
+                            <td>
+                            <input type="radio" id="engine2_c" name="engine2" value="C">
+                            <label class="checkbox_wrapper" for="engine2_c"></label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h1>措置及び総合結果</h1>
+                <h2>●点検時に実施した措置</h2>
+                <input type="checkbox" name="action" value="grease"> グリース・オイル等の注入<br>
+                <input type="checkbox" name="action" value="bolt"> ボルト・ナットの増し締め・交換<br>
+                <input type="checkbox" name="action" value="suspension"> 吊金具の交換 <label class="repair_count"><input type="number" name="suspension_count"></label>箇所<br>
+                <input type="checkbox" name="action" value="chain"> チェーンの交換 <label class="repair_count"><input type="number" name="chain_count"></label>箇所<br>
+                <input type="checkbox" name="action" value="seat"> 座板の交換 <label class="repair_count"><input type="number" name="seat_count"></label>箇所<br>
+                <input type="checkbox" name="action" value="cleaning"> 石・異物の除去、枝の剪定<br>
+                <input type="checkbox" name="action" value="other"> その他 <input type="text" name="other_action" class="result_short_opinion"><br>
+                
+                <label for="remarks">●所見</label><br>
+                <textarea name="remarks" class="result_long_opinion"></textarea>
+                
+                <h2>●総合結果</h2>
+                <form>
+                    <label>
+                        <input type="radio" name="overall_result" value="A"> Ａ：健全（△・×なし）
+                    </label><br>
+                    <label>
+                        <input type="radio" name="overall_result" value="B"> Ｂ：経過観察（△あり、×なし）
+                    </label><br>
+                    <label>
+                        <input type="radio" name="overall_result" value="C"> Ｃ：要修繕・要対応（×あり）
+                    </label><br>
+                    <label>
+                        <input type="radio" name="overall_result" value="D"> Ｄ：使用禁止措置 <input type="text" name="prohibition_reason" class="result_short_opinion">
+                    </label>
+                </form><br>
+
+                <h1>以下は点検後の記録（担当者記入欄）</h1>
+                <h2>●対応方針</h2>
+                <input type="checkbox" name="plan" value="maintenance"> 整備班で対応予定<br>
+                <input type="checkbox" name="plan" value="repair"> 修繕・修繕工事で対応予定<br>
+                <input type="checkbox" name="plan" value="improvement"> 施設改良工事で対応予定<br>
+                <input type="checkbox" name="plan" value="inspection"> 精密点検予定<br>
+                <input type="checkbox" name="plan" value="removal"> 撤去予定<br>
+                <input type="checkbox" name="plan" value="other"> その他 <input type="text" name="plan_other" class="result_short_opinion">
+
+                <h2>●対応予定時期</h2>
+                <form>
+                    <div class="CheckSheet_set_month">
+                        <select id="planned_month" name="planned_month">
+                            <option value="1">１月</option>
+                            <option value="2">２月</option>
+                            <option value="3">３月</option>
+                            <option value="4">４月</option>
+                            <option value="5">５月</option>
+                            <option value="6">６月</option>
+                            <option value="7">７月</option>
+                            <option value="8">８月</option>
+                            <option value="9">９月</option>
+                            <option value="10">１０月</option>
+                            <option value="11">１１月</option>
+                            <option value="12">１２月</option>
+                        </select>
+                    </div>
+                    <label>
+                        <input type="radio" name="planned_decade" value="early"> 上
+                    </label>
+                    <label>
+                        <input type="radio" name="planned_decade" value="middle"> 中
+                    </label>
+                    <label>
+                        <input type="radio" name="planned_decade" value="late"> 下 旬頃
+                    </label>
+                </form><br>
+
+                <input type="checkbox" name="prohibition_measure" value="implemented"> 本格的な使用禁止措置
+                <div class="CheckSheet_set_date">
+                    <input type="date" id="prohibition_date" name="prohibition_date">
+                </div>
+                <form>
+                    <label>
+                        <input type="radio" name="prohibition_status" value="implemented"> 実施済み
+                    </label>
+                    <label>
+                        <input type="radio" name="prohibition_status" value="planned"> 実施予定
+                    </label>
+                </form>
+
+                <label for="additional_remarks">●備考</label>
+                <textarea name="additional_remarks" class="result_long_opinion"></textarea><br>
+                
+                <div class="CheckSheet_save_button">
+                    <button id="save-button" type="button">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // ========================================
+            // 【推論結果を自動反映】
+            // ========================================
+            document.addEventListener('DOMContentLoaded', async function() {
+                const inspectionId = new URLSearchParams(window.location.search).get('inspection_id') || 1;
+
+                try {
+                    // API から推論結果を取得
+                    const response = await fetch(`/api/inspection/${inspectionId}`);
+                    const data = await response.json();
+
+                    console.log('取得したデータ:', data);
+
+                    // ========== チェーンの AI 推論結果を反映 ==========
+                    if (data.chain_condition && data.chain_confidence) {
+                        // AI 結果を画面に表示
+                        document.getElementById('ai-result-display').style.display = 'block';
+                        document.getElementById('ai-condition-display').innerText = 
+                            data.chain_condition === 'rust' ? '錆あり' : '錆なし';
+                        document.getElementById('ai-confidence-display').innerText = 
+                            `(確信度: ${(data.chain_confidence * 100).toFixed(1)}%)`;
+
+                        // 推論結果に基づいて自動チェック
+                        if (data.chain_condition === 'rust') {
+                            // 錆が見つかった → C（要対応）に自動チェック
+                            document.getElementById('chain_c').checked = true;
+                            console.log('チェーン: 錆あり → C（要対応）に自動選択');
+                        } else {
+                            // 錆がない → A（異常なし）に自動チェック
+                            document.getElementById('chain_a').checked = true;
+                            console.log('チェーン: 錆なし → A（異常なし）に自動選択');
+                        }
+                    }
+
+                    // ========== 日付を自動入力 ==========
+                    if (data.inspection_date) {
+                        document.getElementById('inspection_date').value = data.inspection_date;
+                    }
+
+                } catch (error) {
+                    console.error('データ取得エラー:', error);
+                }
+            });
+
+            // ========================================
+            // 【保存ボタン】
+            // ========================================
+            document.getElementById('save-button').addEventListener('click', async function() {
+                // フォーム データを収集
+                const formData = {
+                    inspection_date: document.getElementById('inspection_date').value,
+                    
+                    // 点検結果
+                    chain_result: document.querySelector('input[name="chain_result"]:checked')?.value,
+                    suspension_result: document.querySelector('input[name="suspension_result"]:checked')?.value,
+                    seat_result: document.querySelector('input[name="seat_result"]:checked')?.value,
+                    
+                    // 措置
+                    actions_taken: Array.from(document.querySelectorAll('input[name="action"]:checked'))
+                        .map(el => el.value)
+                        .join(', '),
+                    remarks: document.querySelector('textarea[name="remarks"]').value,
+                    
+                    // 総合結果
+                    overall_result: document.querySelector('input[name="overall_result"]:checked')?.value,
+                    
+                    // 対応予定
+                    planned_month: document.getElementById('planned_month').value,
+                    prohibition_date: document.getElementById('prohibition_date').value,
+                    additional_remarks: document.querySelector('textarea[name="additional_remarks"]').value
+                };
+
+                console.log('保存データ:', formData);
+
+                // サーバーに送信（実装は別途）
+                alert('保存しました！\n\n' + JSON.stringify(formData, null, 2));
+            });
+        </script>
+    </body>
+</html>
